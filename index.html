@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八八班Class8</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 背景层 */
+        .background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -1;
+            transition: filter 0.3s ease;
+        }
+        
+        /* 内容层 */
+        .content-layer {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 0;
+        }
+        
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        
+        .meme-card {
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .meme-card.show {
+            transform: scale(1);
+        }
+        
+        .meme-link {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .meme-link:hover {
+            color: #6b7280;
+        }
+        
+        .teacher-name {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: normal;
+        }
+        
+        .click-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .click-hint.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景层 -->
+    <div id="backgroundLayer" class="background-layer"></div>
+    
+    <!-- 内容层 -->
+    <div class="content-layer">
+        <!-- 导航栏 -->
+        <nav class="glass-effect shadow-lg fixed top-0 left-0 right-0 z-50">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-graduation-cap text-blue-600 text-2xl"></i>
+                        <h1 class="text-xl font-bold text-gray-800">八八班Class8</h1>
+                    </div>
+                    
+                    <div class="hidden md:flex space-x-8">
+                        <a href="#home" class="nav-link text-gray-700 hover:text-blue-600 font-medium">首页</a>
+                        <a href="#about" class="nav-link text-gray-700 hover:text-blue-600 font-medium">班级介绍</a>
+                        <a href="#teacher" class="nav-link text-gray-700 hover:text-blue-600 font-medium">班主任</a>
+                        <a href="#activities" class="nav-link text-gray-700 hover:text-blue-600 font-medium">班级活动</a>
+                        <a href="#schedule" class="nav-link text-gray-700 hover:text-blue-600 font-medium">课程表</a>
+                        <a href="#contact" class="nav-link text-gray-700 hover:text-blue-600 font-medium">联系我们</a>
+                    </div>
+                    
+                    <!-- 移动端菜单按钮 -->
+                    <button class="md:hidden text-gray-700" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 移动端菜单 -->
+            <div id="mobileMenu" class="hidden md:hidden glass-effect">
+                <div class="px-4 py-2 space-y-2">
+                    <a href="#home" class="block py-2 text-gray-700 hover:text-blue-600">首页</a>
+                    <a href="#about" class="block py-2 text-gray-700 hover:text-blue-600">班级介绍</a>
+                    <a href="#teacher" class="block py-2 text-gray-700 hover:text-blue-600">班主任</a>
+                    <a href="#activities" class="block py-2 text-gray-700 hover:text-blue-600">班级活动</a>
+                    <a href="#schedule" class="block py-2 text-gray-700 hover:text-blue-600">课程表</a>
+                    <a href="#contact" class="block py-2 text-gray-700 hover:text-blue-600">联系我们</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- 主要内容 -->
+        <main>
+            <!-- 首页横幅 - 独立页面 -->
+            <section id="home" class="hero-section">
+                <div class="glass-effect rounded-2xl p-12 text-center max-w-4xl mx-auto">
+                    <h2 class="text-5xl font-bold text-gray-800 mb-6">欢迎来到八八班</h2>
+                    <p class="text-2xl text-gray-600 mb-8">团结奋进，追求卓越</p>
+                    <div class="flex justify-center space-x-8">
+                        <div class="text-center">
+                            <i class="fas fa-users text-4xl text-blue-600 mb-3"></i>
+                            <p class="text-3xl font-bold text-gray-800">76</p>
+                            <p class="text-gray-600">班级人数</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-trophy text-4xl text-yellow-500 mb-3"></i>
+                            <p class="text-3xl font-bold text-gray-800">many</p>
+                            <p class="text-gray-600">获奖次数</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-star text-4xl text-purple-600 mb-3"></i>
+                            <p class="text-3xl font-bold text-gray-800">a lot</p>
+                            <p class="text-gray-600">优秀学生</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 班级介绍 - 独立页面 -->
+            <section id="about" class="section-page">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-10 text-center">班级介绍</h2>
+                    <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                        <div class="glass-effect rounded-xl p-8 card-hover">
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+                                <i class="fas fa-book text-blue-600 mr-2"></i>班级概况
+                            </h3>
+                            <p class="text-gray-600 leading-relaxed text-lg">
+                                八八班是一个充满活力和创造力的集体。我班共76名同学，每个人都怀揣着梦想，在知识的海洋中遨游。
+                                班级氛围和谐融洽，同学们互帮互助，共同进步。我们坚信，在Miss Cheng的带领下，八八班一定会创造更加辉煌的明天。
+                            </p>
+                        </div>
+                        <div class="glass-effect rounded-xl p-8 card-hover">
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+                                <i class="fas fa-bullseye text-green-600 mr-2"></i>班规
+                            </h3>
+                            <ul class="text-gray-600 space-y-3 text-lg">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i>培养良好的学习习惯</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i>提高班级整体成绩</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i>增强班级凝聚力</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i>全面发展，德智体美劳</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 班主任介绍 - 独立页面 -->
+            <section id="teacher" class="section-page">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-10 text-center">班主任 Miss Cheng</h2>
+                    <div class="glass-effect rounded-xl p-10 max-w-4xl mx-auto card-hover">
+                        <div class="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-10">
+                            <div class="flex-shrink-0">
+                                <img src="https://picsum.photos/seed/teacher/250/250.jpg" alt="Miss Cheng" 
+                                     class="w-56 h-56 rounded-full object-cover shadow-xl">
+                            </div>
+                            <div class="flex-1 text-center md:text-left">
+                                <h3 class="text-3xl font-semibold text-gray-800 mb-4">程老师 (Miss Cheng)</h3>
+                                <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                                    程老师是我们八八班的班主任，她不仅教学经验丰富，更是一位充满爱心和耐心的好老师。
+                                    她总是用最生动的方式传授知识，用最温暖的关怀呵护每一个学生的成长。
+                                </p>
+                                <div class="flex flex-wrap justify-center md:justify-start gap-3">
+                                    <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                                        <i class="fas fa-chalkboard-teacher mr-1"></i>教学经验丰富
+                                    </span>
+                                    <span class="px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                        <i class="fas fa-heart mr-1"></i>关爱学生
+                                    </span>
+                                    <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                                        <i class="fas fa-lightbulb mr-1"></i>创新教学
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 班级活动 - 独立页面 -->
+            <section id="activities" class="section-page">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-10 text-center">班级活动</h2>
+                    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        <div class="glass-effect rounded-xl p-6 card-hover">
+                            <img src="https://picsum.photos/seed/activity1/400/250.jpg" alt="运动会" 
+                                 class="w-full h-48 object-cover rounded-lg mb-4">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">校园运动会</h3>
+                            <p class="text-gray-600 mb-4">同学们在运动场上挥洒汗水，展现青春活力</p>
+                            <span class="text-sm text-gray-500">2024年3月</span>
+                        </div>
+                        <div class="glass-effect rounded-xl p-6 card-hover">
+                            <img src="https://picsum.photos/seed/activity2/400/250.jpg" alt="文艺汇演" 
+                                 class="w-full h-48 object-cover rounded-lg mb-4">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">文艺汇演</h3>
+                            <p class="text-gray-600 mb-4">展示才艺，绽放光彩，八八班荣获最佳组织奖</p>
+                            <span class="text-sm text-gray-500">2024年4月</span>
+                        </div>
+                        <div class="glass-effect rounded-xl p-6 card-hover">
+                            <img src="https://picsum.photos/seed/activity3/400/250.jpg" alt="社会实践" 
+                                 class="w-full h-48 object-cover rounded-lg mb-4">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">社会实践</h3>
+                            <p class="text-gray-600 mb-4">走出校园，服务社会，体验生活</p>
+                            <span class="text-sm text-gray-500">2024年5月</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 联系我们 - 独立页面 -->
+            <section id="contact" class="section-page">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-10 text-center">联系我们</h2>
+                    <div class="glass-effect rounded-xl p-10 max-w-3xl mx-auto">
+                        <div class="grid md:grid-cols-2 gap-8 mb-8">
+                            <div class="text-center">
+                                <i class="fas fa-map-marker-alt text-4xl text-red-500 mb-4"></i>
+                                <h3 class="font-semibold text-gray-800 mb-3 text-xl">班级位置</h3>
+                                <p class="text-gray-600 text-lg">教学楼二楼西侧</p>
+                            </div>
+                            <div class="text-center">
+                                <i class="fas fa-envelope text-4xl text-blue-500 mb-4"></i>
+                                <h3 class="font-semibold text-gray-800 mb-3 text-xl">邮箱联系</h3>
+                                <p class="text-gray-600 text-lg"> --@---.com </p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-600 text-lg">
+                                <i class="fas fa-phone text-green-500 mr-2"></i>
+                                班主任电话： --- ---- ----
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- 页脚 -->
+        <footer class="glass-effect mt-0">
+            <div class="container mx-auto px-4 py-6">
+                <div class="text-center">
+                    <p class="text-gray-600">© 2024 八八班 - 团结奋进，追求卓越</p>
+                    <p class="text-sm text-gray-500 mt-2">
+                        Made with <i class="fas fa-heart text-red-500"></i> by Class 88
+                        <span class="meme-link ml-4" onclick="handleMemeClick()">一梗</span>
+                    </p>
+                </div>
+            </div>
+        </footer>
+        
+        <!-- 梗卡片 -->
+        <div id="memeCard" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="meme-card glass-effect rounded-2xl p-8 max-w-md mx-4 relative">
+                <button onclick="toggleMemeCard()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">班级梗图</h3>
+                <div id="memeContent" class="text-center">
+                    <!-- 梗内容将在这里动态显示 -->
+                </div>
+                <button onclick="nextMeme()" class="mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+                    下一个梗 <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 点击提示 -->
+        <div id="clickHint" class="click-hint"></div>
+    </div>
+    
+    <script>
+        // 班级梗数据
+        const memes = [
+            {
+                title: "沙特安普！",
+                content: "All classmates shuuuuut UUUUp!"
+            },
+            {
+                title: "网页仍在开发中",
+                content: "All classmates shuuuuut UUUUp!"
+            }
+        ];
+        
+        let currentMemeIndex = 0;
+        let memeClickCount = 0;
+        const requiredClicks = 5;
+        
+        // 移动端菜单切换
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // 关闭移动端菜单
+                    document.getElementById('mobileMenu').classList.add('hidden');
+                }
+            });
+        });
+        
+        // 背景模糊效果
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.scrollY;
+            const maxBlur = 10;
+            const blurAmount = Math.min(scrollPosition / 100, maxBlur);
+            const backgroundLayer = document.getElementById('backgroundLayer');
+            backgroundLayer.style.filter = `blur(${blurAmount}px)`;
+            
+            // 导航栏阴影效果
+            const nav = document.querySelector('nav');
+            if (scrollPosition > 50) {
+                nav.classList.add('shadow-xl');
+            } else {
+                nav.classList.remove('shadow-xl');
+            }
+        });
+        
+        // 处理梗链接点击
+        function handleMemeClick() {
+            memeClickCount++;
+            
+            if (memeClickCount >= requiredClicks) {
+                // 达到所需点击次数，打开梗卡片
+                toggleMemeCard();
+                // 重置点击计数
+                memeClickCount = 0;
+            }
+        }
+        
+        // 显示点击提示
+        function showClickHint(message) {
+            const hint = document.getElementById('clickHint');
+            hint.textContent = message;
+            hint.classList.add('show');
+            
+            // 3秒后隐藏提示
+            setTimeout(() => {
+                hint.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 切换梗卡片
+        function toggleMemeCard() {
+            const memeCard = document.getElementById('memeCard');
+            const card = memeCard.querySelector('.meme-card');
+            
+            if (memeCard.classList.contains('hidden')) {
+                memeCard.classList.remove('hidden');
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, 10);
+                showMeme();
+            } else {
+                card.classList.remove('show');
+                setTimeout(() => {
+                    memeCard.classList.add('hidden');
+                }, 300);
+            }
+        }
+        
+        // 显示当前梗
+        function showMeme() {
+            const memeContent = document.getElementById('memeContent');
+            const meme = memes[currentMemeIndex];
+            memeContent.innerHTML = `
+                <h4 class="text-xl font-semibold text-gray-800 mb-3">${meme.title}</h4>
+                <p class="text-gray-600 leading-relaxed">${meme.content}</p>
+            `;
+        }
+        
+        // 下一个梗
+        function nextMeme() {
+            currentMemeIndex = (currentMemeIndex + 1) % memes.length;
+            showMeme();
+        }
+        
+        // 点击卡片外部关闭
+        document.getElementById('memeCard').addEventListener('click', function(e) {
+            if (e.target === this) {
+                toggleMemeCard();
+            }
+        });
+    </script>
+</body>
+</html>
